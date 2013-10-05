@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+
+    <script src="bower_components/processing/processing.js"></script>
+    <script src="bower_components/bacon/dist/Bacon.js"></script>
+
+</head>
+<body>
+<h1>Hydroelectricity simulation</h1>
+<h2>Works with processing.js and bacon.js</h2>
+<p><canvas id="canvas1" width="200" height="200"></canvas></p>
+TODO:<br>
+1. Coordinate system <br>
+2. Time
+<script id="script1" type="text/javascript">
+
+    // Simple way to attach js code to the canvas is by using a function
+    function sketchProc(processing) {
+        // Override draw function, by default it will be called 60 times per second
+        var d, startWheel = false, totalkWt = 0, baseX = 105, lastY = 0, startY = 100, dropsLength = 30;
+        lastY = startY;
+
+        var Drop = function(processing) {
+            this.y = this.startY = (startY-(Math.random()*50))+20;
+            this.x = baseX+Math.random()*10;
+            this.processing = processing;
+            this.s = this.processing.loadShape("i/drop-blue.svg");
+        };
+        Drop.prototype.draw = function() {
+            this.processing.smooth();
+            this.s.scale(1);
+            this.processing.shape(this.s, this.x, this.y, 15, 25);
+        };
+        Drop.prototype.fall = function() {
+            this.y++;
+            if (this.y > this.processing.height) {
+                this.y = this.startY;
+            }
+            this.draw();
+        };
+
+        var Wheel = function(processing) {
+            this.s = processing.loadShape("i/wheel.svg");
+            this.spineCount = 0;
+        };
+        Wheel.prototype.draw = function() {
+            processing.shape(this.s, 110, 200, 150, 150);
+        };
+        Wheel.prototype.spine = function() {
+            this.spineCount++;
+//            processing.shapeMode(processing.CORNER);
+//            processing.shapeMode(processing.CENTER);
+//            this.s.rotate(0.1);
+//            this.draw();
+
+//            processing.point(processing.height/2,processing.width/2);
+
+
+//            this.s.translate(-this.s.width/2,-this.s.height/2);
+            this.s.rotate(processing.radians(89));
+            this.s.translate(0,-this.s.width);
+//            this.draw();
+
+            this.s.rotate(processing.radians(89));
+            this.s.translate(0,-this.s.width);
+//            this.draw();
+//
+            this.s.rotate(processing.radians(89));
+            this.s.translate(0,-this.s.width);
+//            this.draw();
+//
+            this.s.rotate(processing.radians(89));
+            this.s.translate(0,-this.s.width);
+            this.draw();
+
+        };
+        var drops = [new Drop(processing)], wheel = new Wheel(processing);
+        processing.setup = function () {
+            processing.size(500, 400);  // Sets the canvas size to 200 by 200 pixels
+            processing.fill(0);     // Set line drawing color to monochrome white
+            processing.frameRate(60);   // Set up draw() to be called 30 times per second
+            var fontA = processing.loadFont("courier");
+            processing.textFont(fontA, 14);
+        };
+        function drawTap() {
+            var s = processing.loadShape("i/water-tap.svg");
+            processing.shape(s, 0, 0, 150, 150);
+        }
+        function drawText(kWh) {
+            processing.text(kWh+" kWh",250,200);
+        }
+        function clear() {
+            processing.background('fff');
+        }
+        processing.draw = function() {
+            clear();
+            if ((drops.length < dropsLength) && (drops[drops.length-1].y > startY)) {
+                drops.push(d = new Drop(processing));
+            }
+            for (var i in drops) {
+                if (drops.hasOwnProperty(i)){
+                    drops[i].fall();
+                    if (lastY < drops[i].y) {
+                        lastY = i
+                    }
+                }
+            }
+            drawTap();
+            if (startWheel || drops[i].y > (startY+10)){
+                wheel.spine();
+                startWheel = true;
+
+                if ((wheel.spineCount % 50) === 0)
+                    totalkWt++;
+                drawText(totalkWt);
+            } else {
+                wheel.draw()
+            }
+        };
+
+    }
+
+    var canvas = document.getElementById("canvas1");
+    // attaching the sketchProc function to the canvas
+    var p = new Processing(canvas, sketchProc);
+    // p.exit(); to detach it
+</script>
+</body>
+</html>
