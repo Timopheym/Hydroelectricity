@@ -1,0 +1,23 @@
+{
+  "name": "Hydroelectricity",
+  "version": "0.0.0",
+  "authors": [
+    "Timopheym <timopheym@gmail.com>"
+  ],
+  "description": "Hydroelectricity simulation using FRP",
+  "main": "app.js",
+  "keywords": [
+    "FRP",
+    "canvas",
+    "simulation"
+  ],
+  "license": "MIT",
+  "homepage": "Hydroelectricity.fripple.ru",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
